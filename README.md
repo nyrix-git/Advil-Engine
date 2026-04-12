@@ -27,9 +27,9 @@ Check out the code examples in examples.txt which contain many examples
 # How to import the engine to my project?
 * Download the .zip file
 * Extract the contents
-* Import the project into your preferred code editor
+* Import the project src into your preferred code editor
 * Ensure you are using Java 8
-* Load in the native files from LWJGL 2.9.3
+* Load the LWJGL 2.9.3 native files, include both LWJGL 2.9.3 and Slick2D libraries in your build path, and ensure they are properly referenced in your project configuration.
 
 In the future, you will be able to import Advil Engine as a library
 
