@@ -1,0 +1,170 @@
+// Window Creation
+import mainAdvilEngine.AdvilEngine;
+import windowAdvilEngine.WindowManager;
+
+public class MainExec extends AdvilEngine {
+
+	private static int Window_Width = 1280;
+	private static int Window_Height = 720;
+	private static String Window_Title = "Example Window!"; // As of Advil Engine Tahoe 0.0.1 window title is displayed as empty due to a bug
+	private static boolean Window_isResizable = false;
+	
+	public static void main(String[] args) throws Exception {
+		MainExec mainexec = new MainExec();
+		WindowManager.CreateWindow(mainexec, Window_Title, Window_Width, Window_Height, Window_isResizable);
+
+	}
+
+}
+
+// Debugging
+import org.newdawn.slick.GameContainer;
+
+import debugAdvilEngine.DebugManager;
+import mainAdvilEngine.AdvilEngine;
+import windowAdvilEngine.WindowManager;
+
+public class MainExec extends AdvilEngine {
+
+	private static int Window_Width = 1280;
+	private static int Window_Height = 720;
+	private static String Window_Title = "Example Window!"; // As of Advil Engine Tahoe 0.0.1 window title is displayed as empty due to a bug
+	private static boolean Window_isResizable = false;
+	
+	public static void main(String[] args) throws Exception {
+		MainExec mainexec = new MainExec();
+		WindowManager.CreateWindow(mainexec, Window_Title, Window_Width, Window_Height, Window_isResizable);
+		DebugManager.countTick(); // counts tick (update 60 tps)
+		System.out.println(DebugManager.getFreeMemoryMB()); // prints JVM free memory
+		System.out.println(DebugManager.getMaxMemoryMB()); // prints JVM max memory
+		System.out.println(DebugManager.getUsedMemoryMB()); // prints JVM used memory
+	}
+
+	@Override 
+	public void Tick(GameContainer container) {
+		System.out.println(DebugManager.getFPS(container)); // gets fps and prints it every tick
+		System.out.println(DebugManager.getTPS()); // gets tps and prints it every tick (tps = ticks per second)
+		DebugManager.printMemoryInfo(); // prints memory info every tick
+		DebugManager.debugPrint("Example Text", "", "MainExec.java"); // text, warninglevel, source, (warning level can be "warn", "error", or a empty String)
+	}
+
+}
+
+// Input
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
+
+import inputAdvilEngine.InputManager;
+import mainAdvilEngine.AdvilEngine;
+import windowAdvilEngine.WindowManager;
+
+public class MainExec extends AdvilEngine {
+
+	// window settings
+	private static int Window_Width = 1280;
+	private static int Window_Height = 720;
+
+	// player settings
+	private float Player_movementSpeed = 5f;
+	private float Player_positionX = Window_Width / 2;
+	private float Player_positionY = Window_Height / 2;
+	
+	public static void main(String[] args) throws Exception {
+		MainExec mainexec = new MainExec();
+		WindowManager.CreateWindow(mainexec, "Player Movement", Window_Width, Window_Height, false);
+	}
+
+	@Override
+	public void Init(GameContainer container) {
+
+	}
+
+	@Override
+	public void Tick(GameContainer container) {
+		if (InputManager.KeyboardInputDown_Tick(container, Input.KEY_W)) {
+			Player_positionY -= Player_movementSpeed;
+		}
+		if (InputManager.KeyboardInputDown_Tick(container, Input.KEY_S)) {
+			Player_positionY += Player_movementSpeed;
+		}
+		if (InputManager.KeyboardInputDown_Tick(container, Input.KEY_A)) {
+			Player_positionX -= Player_movementSpeed;
+		}
+		if (InputManager.KeyboardInputDown_Tick(container, Input.KEY_D)) {
+			Player_positionX += Player_movementSpeed;
+		}
+	}
+
+	@Override
+	public void Render(Graphics g) {
+		g.fillRect(Player_positionX, Player_positionY, 200, 200);
+	}
+}
+
+// Collision
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
+import org.newdawn.slick.geom.Rectangle;
+
+import inputAdvilEngine.InputManager;
+import mainAdvilEngine.AdvilEngine;
+import physicsAdvilEngine.PhysicsManager;
+import windowAdvilEngine.WindowManager;
+
+public class MainExec extends AdvilEngine {
+
+	// window settings
+	private static int Window_Width = 1280;
+	private static int Window_Height = 720;
+
+	// player settings
+	private float Player_movementSpeed = 5f;
+	private Rectangle Player_Position = new Rectangle(Window_Width / 2, Window_Height / 2, 200, 200);
+
+	// wall settings
+	private Rectangle Wall_Position = new Rectangle(-1000, 50, 200000, 200);
+
+	public static void main(String[] args) throws Exception {
+		MainExec mainexec = new MainExec();
+		WindowManager.CreateWindow(mainexec, "Player Movement", Window_Width, Window_Height, false);
+	}
+
+	@Override
+	public void Init(GameContainer container) {
+
+	}
+
+	@Override
+	public void Tick(GameContainer container) {
+		
+		float velocityX = 0;
+	    float velocityY = 0;
+
+	    if (InputManager.KeyboardInputDown_Tick(container, Input.KEY_W)) {
+	        velocityY -= Player_movementSpeed;
+	    }
+	    if (InputManager.KeyboardInputDown_Tick(container, Input.KEY_S)) {
+	    	velocityY += Player_movementSpeed;
+	    }
+	    if (InputManager.KeyboardInputDown_Tick(container, Input.KEY_A)) {
+	    	velocityX -= Player_movementSpeed;
+	    }
+	    if (InputManager.KeyboardInputDown_Tick(container, Input.KEY_D)) {
+	    	velocityX += Player_movementSpeed;
+	    }
+
+	    // Move X with collision
+	    PhysicsManager.moveWithCollisionX(Player_Position, velocityX, Wall_Position);
+
+	    // Move Y with collision
+	    PhysicsManager.moveWithCollisionY(Player_Position, velocityY, Wall_Position);
+	}
+
+	@Override
+	public void Render(Graphics g) {
+		g.fill(Player_Position); // fill is the same as for draw but it fills in the shape
+		g.draw(Wall_Position); 
+	}
+}
