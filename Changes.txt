@@ -1,0 +1,9 @@
+Advil Engine 0.2.0
+
+* Changed the versioning of the engine
+* Added camera support with the CameraManager class
+* Added a settings class (SettingsManager) with the functions (SetFPS, and SetVSync)
+* Added basic networking code in the new NetworkManager, NetworkClient, and ClientHandler classes (There's a testing class called ServerMain.java)
+* Fixed the Window Title bug where the window title didn't show up
+* Removed countTick() from DebugManager
+* Changed some code 
