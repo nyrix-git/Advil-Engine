@@ -21,17 +21,15 @@ Advil Engine is in an early stage of development. While core functionality is be
 
 You are also free to fork and modify the engine to suit your needs.
 
-# How do I use the engine?
+# Documentation?
+As of current, documentation is being worked on
 Check out the code examples in examples.txt which contain many examples
 
 # How to import the engine to my project?
-* Download the .zip file
-* Extract the contents
-* Import the project src into your preferred code editor
+* Download the latest release
+* Import LWJGL, Slick2D, and AdvilEngine librarys to your Java IDE of choice and add to build path
 * Ensure you are using Java 8
-* Load the LWJGL 2.9.3 native files, include both LWJGL 2.9.3 and Slick2D libraries in your build path, and ensure they are properly referenced in your project configuration.
-
-In the future, you will be able to import Advil Engine as a library
+* Load the LWJGL 2.9.3 native files
 
 # Is this engine cross-platform
 * ✅ Windows
