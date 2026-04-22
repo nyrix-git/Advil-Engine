@@ -22,8 +22,8 @@ Advil Engine is in an early stage of development. While core functionality is be
 You are also free to fork and modify the engine to suit your needs.
 
 # Documentation?
-As of current, documentation is being worked on
-Check out the code examples in examples.txt which contain many examples
+Check Documentation.txt
+Check out the code examples in Examples.txt which contain many examples
 
 # How to import the engine to my project?
 * Download the latest release
