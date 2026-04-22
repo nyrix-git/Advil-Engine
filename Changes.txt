@@ -1,0 +1,40 @@
+Advil Engine 0.2.0
+
+* Changed the versioning of the engine
+* Added camera support with the CameraManager class
+* Added a settings class (SettingsManager) with the functions (SetFPS, and SetVSync)
+* Added basic networking code in the new NetworkManager, NetworkClient, and ClientHandler classes (There's a testing class called ServerMain.java)
+* Fixed the Window Title bug where the window title didn't show up
+* Removed countTick() from DebugManager
+* Changed some code 
+
+Advil Engine 0.3.0
+
+* Renamed some method names and variables to use camelCase
+* Moved the Light class from LightingManager to its own file
+* Removed any references to String WindowTitle
+* Removed Window Title being having an empty String exceptions
+* Removed unnecessary comments and code
+* Removed MinimizeWindow() and CloseWindow() methods from WindowManager class
+* Removed variable boolean isWindowBeingResized from WindowManager class
+* Created new class called ParticleManager which manages particles and creates them
+* Removed ServerMain class
+
+Advil Engine 0.4.0
+
+* Added controller input support (this was not tested so it might not work)
+* You can pick between gradient lighting and flat lighting
+* Renamed package names
+* Increased lighting steps (how many circles are being drawn for the gradient light)
+* Added helping utilities for player like PlayerInventory and Item
+* Removed debugPrint() entirely
+* The user will be able to choose lighting steps
+
+Advil Engine 0.5.0
+
+* Added new input method to InputManager (get cursor position)
+* Add more methods to HelperUtils
+* Added being able to change font through SettingsManager
+* Changed the getRandom method
+* Removed InventoryHelper
+* Removed printMemoryInfo() from DebugManager
