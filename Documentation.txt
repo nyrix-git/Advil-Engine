@@ -1,0 +1,239 @@
+Advil Engine 0.5.0 documentation: 
+
+Audio: // Note: Audio only supports .ogg or .wav, use another library for audio support for files like .mp3
+
+@ Playing sound effect
+AudioManager.playSound("res/sounds/jump.ogg", 0.5f);
+
+@ Playing music
+AudioManager.playMusic("res/music/musicBackground.ogg", 0.7f);
+
+@ Stopping music
+Music backgroundMusic = AudioManager.playMusic("res/music/musicBackground.ogg", 0.7f); // create reference to the music playing
+AudioManager.stopMusic(backgroundMusic); // stop the music by putting in the reference as the argument
+
+Camera: 
+
+@ Create the camera
+
+private CameraManager camera;
+
+@Override // Java syntax
+public void Init(GameContainer container) {
+    camera = new CameraManager(0, 0); // creates camera on the coordinates (0, 0)
+}
+
+@ Move camera
+camera.move(0, -5) // moves the camera up on the y axis
+
+@ Apply the camera to rendering
+
+@Override // Java syntax
+public void Render(Graphics g) {
+
+    // Apply camera transform
+    camera.apply(g);
+
+    // Draw everything affected by camera
+    g.drawString("World Object", 500, 500);
+    g.fillRect(400, 400, 50, 50);
+
+    // Reset so the User Interface isn't affected by camera
+    camera.reset(g);
+
+    // Draw User Interface (this is fixed to the screen due to the camera not affecting this)
+    g.drawString("HUD / UI", 10, 30);
+}
+
+
+
+Core: 
+
+public class "your main execution class" extends AdvilEngine {
+
+	@Override
+	public void Init(GameContainer container) {
+		// Inits everything
+	}
+	@Override
+	public void Tick(GameContainer container) {
+		// game logic
+	}
+
+	@Override
+	public void Render(Graphics g) {
+		// renders
+	}
+
+	public static void main(String[] args) {
+		"your main execution class" main = new "your main execution class"("Window title")
+		WindowManager.createWindow(main, 1280,720, false);	
+	}
+
+
+}
+
+
+Debug:
+
+getTPS() // gets the Game Engines update loop ticks per second
+
+getFPS() // gets the rendering fps
+
+getUsedMemoryMB() // gets the used memory
+
+getFreeMemory() // gets the free memory
+
+getMaxMemoryMB() // gets the max JVM memory
+
+File: 
+	FileManager.createFilePath("data", "save.txt"); // creates file at the specified path 
+	Output: data/save.txt
+	
+	FileManager.saveFilePath("data", "save.txt", "PlayerScore=100\nLevel=2"); // saves to the created save.txt
+	Output: PlayerScore=100
+		Level=2
+	
+	String content = FileManager.loadFilePath("data", "save.txt"); // reads the content from the file
+	System.out.println(content);	
+	Output: PlayerScore=100
+		Level=2
+	
+	FileManager.deleteFilePath("data", "save.txt"); // deletes the file at the specified path
+	Output: delete file at the specified path
+
+Helper Utils:
+
+	float distance = HelperUtils.getDistanceSquared(1x, 1y, 2x, 2y); // puts the variables of the positions
+
+	Vector2f playerPosition = new Vector2f(100, 200);
+	Vector2f enemyPosition = new Vector2f(150, 250);
+
+	float distanceVector2 = HelperUtils.getDistanceSquaredVector2(playerPosition, enemyPosition); // put in 2 Vector2's to get the distance between them
+	
+	System.out.println(HelperUtils.randomBoolean()); // gets a random Boolean between true and false
+
+	HelperUtils.chance(0.25) // use for random number generator chance
+
+	int randomInt = HelperUtils.randomInt(5, 15); // gets a random number integer between 5 and 15
+	
+	double randomDouble = HelperUtils.randomDouble(1.0, 3.5); // gets a random number decimal between 1.0 and 3.5
+
+	int playerHealth = HelperUtils.clamp(playerHealth, 0, 100); // clamps playerHealth int variable by 0 to 100
+
+	float x = HelperUtils.lerp(startX, endX, 0.1f); // use this for smooth transitions
+
+	Vector2f direction = new Vector2f(10, 5);
+	Vector2f normalized = HelperUtils.normalize(direction); // use to turn a turn a vector2 into a single unit
+
+Input: 
+
+	// Keyboard - holding key
+        if (InputManager.keyboardInputDown(container, Input.KEY_SPACE)) {
+            System.out.println("Space is being held");
+        }
+
+        // Keyboard - single press
+        if (InputManager.keyboardInputPressed(container, Input.KEY_SPACE)) {
+            System.out.println("Space was pressed a single time");
+        }
+
+	// gets mouse position
+	int mouseX = InputManager.getCursorX(container);
+        int mouseY = InputManager.getCursorY(container);
+
+	// Mouse held down
+        if (InputManager.mouseInputDown(container, Input.MOUSE_LEFT_BUTTON)) {
+            System.out.println("Left click is being held");
+        }
+
+        // Mouse pressed once
+        if (InputManager.mouseInputPressed(container, Input.MOUSE_LEFT_BUTTON)) {
+            System.out.println("Left click was pressed a single time");
+        }
+
+
+
+Lighting: 
+	// Create LightingManager instance
+	LightingManager lighting = new LightingManager();
+
+	// Add lighting
+	lighting.addLight(300, 200, 150, Color.yellow);
+	lighting.addLight(500, 400, 100, Color.white);
+
+	// Render lighting
+	lighting.Render(g, true, 20) // (g, gradient effect?, lighting steps) // Note: more lighting steps = higher quality but lower fps
+
+Networking:
+
+	// start a server inside Init() or main()
+	NetworkManager server = new NetworkManager();
+	server.startServer(5000); // set the port number
+	
+	// start a client inside Init() or another main()
+	public static void main(String[] args) {
+        NetworkClient client = new NetworkClient();
+        client.connect("client", 5000); // must be the same port number as the server or otherwise wont connect (or crash)
+
+        // send a message to the server
+        client.send("Hello server!");
+    }
+
+Particle: 
+	// create a particle
+	ParticleManager.createParticle(x, y);
+	ParticleManager.createParticle(x, y, Color.red); // colored particle
+	Image img = new Image("res/particle.png");
+	ParticleManager.createParticle(x, y, img); // textured particle	
+	
+	// particle tick
+	public void Tick() {
+		ParticleManager.tick();
+	}
+
+	// particle render
+	public void Render(Graphics g) {
+		ParticleManager.render(g);
+	}
+
+Physics:
+
+	Rectangle player = new Rectangle(100, 100, 32, 32);
+	Rectangle ground = new Rectangle(0, 300, 800, 50);
+
+	float velX = 0;
+	float velY = 0;
+	float friction = 0.2f;
+
+	public void Tick() {
+		// Apply gravity
+    		velY = PhysicsManager.applyGravity(velY);
+
+    		// Apply friction
+    		velX = PhysicsManager.applyFriction(velX, friction);
+
+    		// Save old positions
+    		float oldX = player.getX();
+    		float oldY = player.getY();
+
+    		// Move X and check collision
+    		boolean hitX = PhysicsManager.moveWithCollisionX(player, velX, ground);
+
+    		// Move Y and check collision
+    		boolean hitY = PhysicsManager.moveWithCollisionY(player, velY, ground);
+    	}
+
+	// change gravity
+	PhysicsManager.setGravity(0.8f);
+
+Settings: 
+
+	SettingsManager.setFPS(60); // sets max fps
+	SettingsManager.setVSync(true) // sets vsync 
+	SettingsManager.setFont("font file path"); // sets font 
+
+Window:
+
+	WindowManager.createWindow(properties); // creates a window with the assigned properties
+	WindowManager.resizeWindow(); // honestly don't know, use it to resize User Interface properly?
