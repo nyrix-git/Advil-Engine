@@ -1,78 +1,19 @@
-// Window Creation
-import mainAdvilEngine.AdvilEngine;
-import windowAdvilEngine.WindowManager;
-
-public class MainExec extends AdvilEngine {
-
-	private static int Window_Width = 1280;
-	private static int Window_Height = 720;
-	private static String Window_Title = "Example Window!"; // As of Advil Engine Tahoe 0.0.1 window title is displayed as empty due to a bug
-	private static boolean Window_isResizable = false;
-	
-	public static void main(String[] args) throws Exception {
-		MainExec mainexec = new MainExec();
-		WindowManager.CreateWindow(mainexec, Window_Title, Window_Width, Window_Height, Window_isResizable);
-
-	}
-
-}
-
-// Debugging
-import org.newdawn.slick.GameContainer;
-
-import debugAdvilEngine.DebugManager;
-import mainAdvilEngine.AdvilEngine;
-import windowAdvilEngine.WindowManager;
-
-public class MainExec extends AdvilEngine {
-
-	private static int Window_Width = 1280;
-	private static int Window_Height = 720;
-	private static String Window_Title = "Example Window!"; // As of Advil Engine Tahoe 0.0.1 window title is displayed as empty due to a bug
-	private static boolean Window_isResizable = false;
-	
-	public static void main(String[] args) throws Exception {
-		MainExec mainexec = new MainExec();
-		WindowManager.CreateWindow(mainexec, Window_Title, Window_Width, Window_Height, Window_isResizable);
-		DebugManager.countTick(); // counts tick (update 60 tps)
-		System.out.println(DebugManager.getFreeMemoryMB()); // prints JVM free memory
-		System.out.println(DebugManager.getMaxMemoryMB()); // prints JVM max memory
-		System.out.println(DebugManager.getUsedMemoryMB()); // prints JVM used memory
-	}
-
-	@Override 
-	public void Tick(GameContainer container) {
-		System.out.println(DebugManager.getFPS(container)); // gets fps and prints it every tick
-		System.out.println(DebugManager.getTPS()); // gets tps and prints it every tick (tps = ticks per second)
-		DebugManager.printMemoryInfo(); // prints memory info every tick
-		DebugManager.debugPrint("Example Text", "", "MainExec.java"); // text, warninglevel, source, (warning level can be "warn", "error", or a empty String)
-	}
-
-}
-
-// Input
+// Window creation
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
 
-import inputAdvilEngine.InputManager;
-import mainAdvilEngine.AdvilEngine;
-import windowAdvilEngine.WindowManager;
+import com.AdvilEngine.core.AdvilEngine;
+import com.AdvilEngine.window.WindowManager;
 
 public class MainExec extends AdvilEngine {
 
-	// window settings
-	private static int Window_Width = 1280;
-	private static int Window_Height = 720;
+	public static int windowWidth = 1280;
+	public static int windowHeight = 720;
+	private static String windowTitle = "Window Creation";
+	private static boolean windowIsResizable = false;
 
-	// player settings
-	private float Player_movementSpeed = 5f;
-	private float Player_positionX = Window_Width / 2;
-	private float Player_positionY = Window_Height / 2;
-	
-	public static void main(String[] args) throws Exception {
-		MainExec mainexec = new MainExec();
-		WindowManager.CreateWindow(mainexec, "Player Movement", Window_Width, Window_Height, false);
+	public MainExec(String windowTitle_String) {
+		super(windowTitle_String);
 	}
 
 	@Override
@@ -82,53 +23,136 @@ public class MainExec extends AdvilEngine {
 
 	@Override
 	public void Tick(GameContainer container) {
-		if (InputManager.KeyboardInputDown_Tick(container, Input.KEY_W)) {
-			Player_positionY -= Player_movementSpeed;
-		}
-		if (InputManager.KeyboardInputDown_Tick(container, Input.KEY_S)) {
-			Player_positionY += Player_movementSpeed;
-		}
-		if (InputManager.KeyboardInputDown_Tick(container, Input.KEY_A)) {
-			Player_positionX -= Player_movementSpeed;
-		}
-		if (InputManager.KeyboardInputDown_Tick(container, Input.KEY_D)) {
-			Player_positionX += Player_movementSpeed;
-		}
+
 	}
 
 	@Override
 	public void Render(Graphics g) {
-		g.fillRect(Player_positionX, Player_positionY, 200, 200);
+		g.drawString("Hello Advil Engine!", windowWidth / 2, windowHeight / 2);
 	}
+
+	public static void main(String[] args) throws Exception {
+		// this inherits from the AdvilEngine.java class which is why you see
+		// TickCounter: number
+		MainExec mainexec = new MainExec(windowTitle);
+		WindowManager.createWindow(mainexec, windowWidth, windowHeight, windowIsResizable);
+	}
+
 }
 
-// Collision
+
+
+
+
+// Game: Apple Clicker
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Rectangle;
 
-import inputAdvilEngine.InputManager;
-import mainAdvilEngine.AdvilEngine;
-import physicsAdvilEngine.PhysicsManager;
-import windowAdvilEngine.WindowManager;
+import com.AdvilEngine.core.AdvilEngine;
+import com.AdvilEngine.helperutil.HelperUtils;
+import com.AdvilEngine.input.InputManager;
+import com.AdvilEngine.window.WindowManager;
 
 public class MainExec extends AdvilEngine {
 
-	// window settings
-	private static int Window_Width = 1280;
-	private static int Window_Height = 720;
+	public static int Score = 0;
 
-	// player settings
-	private float Player_movementSpeed = 5f;
-	private Rectangle Player_Position = new Rectangle(Window_Width / 2, Window_Height / 2, 200, 200);
+	// cursor properties
 
-	// wall settings
-	private Rectangle Wall_Position = new Rectangle(-1000, 50, 200000, 200);
+	private static int Cursor_xPosition;
+	private static int Cursor_yPosition;
+
+	// apple properties
+	private static int Apple_xPosition;
+	private static int Apple_yPosition;
+
+	private static Rectangle appleRectangle = new Rectangle(Apple_xPosition, Apple_yPosition, 200, 200);
+
+	// random properties
+	private static int DistanceFromEdgeScreen = 200;
+
+	// window properties
+	public static int windowWidth = 1280;
+	public static int windowHeight = 720;
+	private static String windowTitle = "Apple Clicker";
+
+	public MainExec(String windowTitle_String) {
+		super(windowTitle_String);
+	}
+
+	@Override
+	public void Init(GameContainer container) {
+		Apple_xPosition = HelperUtils.randomInt(0, MainExec.windowWidth - DistanceFromEdgeScreen);
+		Apple_yPosition = HelperUtils.randomInt(0, MainExec.windowHeight - DistanceFromEdgeScreen);
+
+		appleRectangle.setX(Apple_xPosition);
+		appleRectangle.setY(Apple_yPosition);
+	}
+
+	@Override
+	public void Tick(GameContainer container) {
+		Cursor_xPosition = InputManager.getCursorX(container);
+		Cursor_yPosition = InputManager.getCursorY(container);
+
+		if (InputManager.mouseInputPressed(container, Input.MOUSE_LEFT_BUTTON)) {
+			if (appleRectangle.contains(Cursor_xPosition, Cursor_yPosition)) {
+				Score++;
+
+				Apple_xPosition = HelperUtils.randomInt(0, MainExec.windowWidth - DistanceFromEdgeScreen);
+				Apple_yPosition = HelperUtils.randomInt(0, MainExec.windowHeight - DistanceFromEdgeScreen);
+
+				appleRectangle.setX(Apple_xPosition);
+				appleRectangle.setY(Apple_yPosition);
+			}
+		}
+	}
+
+	@Override
+	public void Render(Graphics g) {
+		g.setColor(Color.red);
+		g.fill(appleRectangle);
+		g.setColor(Color.white);
+		g.drawString("Score: " + Score, windowWidth / 2, 0);
+	}
 
 	public static void main(String[] args) throws Exception {
-		MainExec mainexec = new MainExec();
-		WindowManager.CreateWindow(mainexec, "Player Movement", Window_Width, Window_Height, false);
+		MainExec mainexec = new MainExec(windowTitle);
+		WindowManager.createWindow(mainexec, windowWidth, windowHeight, false);
+	}
+}
+
+// Player movement
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
+import org.newdawn.slick.geom.Rectangle;
+
+import com.AdvilEngine.core.AdvilEngine;
+import com.AdvilEngine.input.InputManager;
+import com.AdvilEngine.window.WindowManager;
+
+public class MainExec extends AdvilEngine {
+
+	// window properties
+	public static int windowWidth = 1280;
+	public static int windowHeight = 720;
+	private static String windowTitle = "Player Movement";
+	private static boolean windowIsResizable = false;
+
+	// player properties
+	private static float playerMovementSpeed = 5f;
+
+	// initial starting positions for player
+	private static int Player_xPosition = windowWidth / 2;
+	private static int Player_yPosition = windowHeight / 2;
+
+	private static Rectangle playerRectangle = new Rectangle(Player_xPosition, Player_yPosition, 200, 200);
+
+	public MainExec(String windowTitle_String) {
+		super(windowTitle_String);
 	}
 
 	@Override
@@ -138,33 +162,104 @@ public class MainExec extends AdvilEngine {
 
 	@Override
 	public void Tick(GameContainer container) {
-		
-		float velocityX = 0;
-	    float velocityY = 0;
+		// w
+		if (InputManager.keyboardInputDown(container, Input.KEY_W)) {
+			Player_yPosition -= playerMovementSpeed;
+		}
 
-	    if (InputManager.KeyboardInputDown_Tick(container, Input.KEY_W)) {
-	        velocityY -= Player_movementSpeed;
-	    }
-	    if (InputManager.KeyboardInputDown_Tick(container, Input.KEY_S)) {
-	    	velocityY += Player_movementSpeed;
-	    }
-	    if (InputManager.KeyboardInputDown_Tick(container, Input.KEY_A)) {
-	    	velocityX -= Player_movementSpeed;
-	    }
-	    if (InputManager.KeyboardInputDown_Tick(container, Input.KEY_D)) {
-	    	velocityX += Player_movementSpeed;
-	    }
+		// s
+		if (InputManager.keyboardInputDown(container, Input.KEY_S)) {
+			Player_yPosition += playerMovementSpeed;
+		}
 
-	    // Move X with collision
-	    PhysicsManager.moveWithCollisionX(Player_Position, velocityX, Wall_Position);
+		// a
+		if (InputManager.keyboardInputDown(container, Input.KEY_A)) {
+			Player_xPosition -= playerMovementSpeed;
+		}
 
-	    // Move Y with collision
-	    PhysicsManager.moveWithCollisionY(Player_Position, velocityY, Wall_Position);
+		// d
+		if (InputManager.keyboardInputDown(container, Input.KEY_D)) {
+			Player_xPosition += playerMovementSpeed;
+		}
+
+		playerRectangle.setX(Player_xPosition);
+		playerRectangle.setY(Player_yPosition);
 	}
 
 	@Override
 	public void Render(Graphics g) {
-		g.fill(Player_Position); // fill is the same as for draw but it fills in the shape
-		g.draw(Wall_Position); 
+		g.fill(playerRectangle);
 	}
+
+	public static void main(String[] args) throws Exception {
+		MainExec mainexec = new MainExec(windowTitle);
+		WindowManager.createWindow(mainexec, windowWidth, windowHeight, windowIsResizable);
+	}
+
+}
+
+// title screen appear
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
+import org.newdawn.slick.geom.Circle;
+
+import com.AdvilEngine.core.AdvilEngine;
+import com.AdvilEngine.input.InputManager;
+import com.AdvilEngine.window.WindowManager;
+
+public class MainExec extends AdvilEngine {
+
+	// window properties
+	public static int windowWidth = 1280;
+	public static int windowHeight = 720;
+	private static String windowTitle = "Title Screen Appear";
+	private static boolean windowIsResizable = false;
+
+	// title screen appearing properties
+	private int APPEAR_TIME = 60 * 3; // 180 ticks = 3 seconds
+	private int APPEAR_Timer = 0;
+	
+	private boolean isLogoRendered = true;
+	private float logoScale = 10f;
+	
+	private Circle logoCircle = new Circle(windowWidth / 2, windowHeight / 2, logoScale);
+
+	public MainExec(String windowTitle_String) {
+		super(windowTitle_String);
+	}
+
+	@Override
+	public void Init(GameContainer container) {
+
+	}
+
+	@Override
+	public void Tick(GameContainer container) {
+		logoScale++;
+		// update the circle radius
+		logoCircle.setRadius(logoScale);
+		
+		APPEAR_Timer++;
+		if (APPEAR_Timer >= APPEAR_TIME) {
+			isLogoRendered = false;
+		}
+
+		if (InputManager.keyboardInputPressed(container, Input.KEY_SPACE)) {
+			APPEAR_Timer = APPEAR_TIME;
+		}
+	}
+
+	@Override
+	public void Render(Graphics g) {
+		if (isLogoRendered == true) {
+			g.fill(logoCircle);
+		}
+	}
+
+	public static void main(String[] args) throws Exception {
+		MainExec mainexec = new MainExec(windowTitle);
+		WindowManager.createWindow(mainexec, windowWidth, windowHeight, windowIsResizable);
+	}
+
 }
